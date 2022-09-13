@@ -28,3 +28,9 @@ jobs:
       cache_name: ${{ matrx.cache_name }}
       cache_path: ${{ matrix.cache_path }}
       context: ./.github/workflows/tests/${{ matrix.name }}
+
+  final-check:
+    runs-on: ubuntu-latest
+    needs: build-docker
+    steps:
+      - uses: actions/checkout@v3
