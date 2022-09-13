@@ -34,7 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
-        if: ${{ inputs.cache_path != '' }}
+        if: ${{ inputs.cache_path != '' && inputs.cache_path != '' }}
         with:
           name: ${{ inputs.cache_name }}
           path: ${{ inputs.cache_path }}

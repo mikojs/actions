@@ -1,0 +1,30 @@
+name: tests
+
+on: [push]
+
+jobs:
+  pre-build-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "cache" >> cache
+      - uses: actions/upload-artifact@v3
+        with:
+          name: cache
+          path: ./cache
+
+  build-docker:
+    uses: ./.github/workflows/build-docker.yml
+    needs: pre-build-docker
+    strategy:
+      matrix:
+        include:
+          - name: base
+          - name: with-cache
+            cache_name: cache
+            cache_path: ./.github/workflows/tests/with-cache/cache
+    with:
+      name: ${{ matrix.name }}
+      cache_name: ${{ matrx.cache_name }}
+      cache_path: ${{ matrix.cache_path }}
+      context: ./.github/workflows/tests/${{ matrix.name }}
