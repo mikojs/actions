@@ -22,12 +22,13 @@ jobs:
           - name: base
           - name: with-cache
             cache_name: cache
-            cache_path: ./.github/tests/with-cache/cache
+            cache_path: ./.github/tests/cache
     with:
       name: ${{ matrix.name }}
       cache_name: ${{ matrix.cache_name }}
       cache_path: ${{ matrix.cache_path }}
-      context: ./.github/tests/${{ matrix.name }}
+      context: ./.github/tests
+      file: ./.github/tests/Dockerfile.${{ matrix.name }}
 
   final-check:
     runs-on: ubuntu-latest
