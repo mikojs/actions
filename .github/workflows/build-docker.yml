@@ -14,11 +14,9 @@ on:
       cache_path:
         type: string
       context:
-        required: true
         type: string
         default: .
       file:
-        required: true
         type: string
         default: ./Dockerfile
       push:

@@ -22,12 +22,12 @@ jobs:
           - name: base
           - name: with-cache
             cache_name: cache
-            cache_path: ./.github/workflows/tests/with-cache/cache
+            cache_path: ./.github/tests/with-cache/cache
     with:
       name: ${{ matrix.name }}
-      cache_name: ${{ matrx.cache_name }}
+      cache_name: ${{ matrix.cache_name }}
       cache_path: ${{ matrix.cache_path }}
-      context: ./.github/workflows/tests/${{ matrix.name }}
+      context: ./.github/tests/${{ matrix.name }}
 
   final-check:
     runs-on: ubuntu-latest
