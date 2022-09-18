@@ -8,14 +8,14 @@ const releaseInfo = {};
 
 // TODO: support monorepo
 const initializeRelease = () => {
-  const config = JSON.parse(
+  const { labels } = JSON.parse(
     core.getInput('config'),
   );
 
-  Object.keys(config)
+  Object.keys(labels)
     .forEach(key => {
       releaseInfo[key] = {
-        title: config[key],
+        title: labels[key],
         items: [],
       };
     });
