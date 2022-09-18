@@ -6,18 +6,7 @@ const { repo } = github.context;
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 const releaseInfo = {};
 
-const getFrom = async from => {
-  if (from !== 'latest tag')
-    return from;
-
-  const { data: [{ name } = {}] } = await octokit.rest.repos.listTags(repo);
-
-  if (!name)
-    throw new Error('Here should have at least one tag');
-
-  return name;
-};
-
+// TODO: support monorepo
 const initializeRelease = configStr => {
   const config = JSON.parse(configStr);
 
@@ -34,6 +23,18 @@ const initializeRelease = configStr => {
       title: ':question: Uncategorized',
       items: [],
     };
+};
+
+const getFrom = async from => {
+  if (from !== 'latest tag')
+    return from;
+
+  const { data: [{ name } = {}] } = await octokit.rest.repos.listTags(repo);
+
+  if (!name)
+    throw new Error('Here should have at least one tag');
+
+  return name;
 };
 
 const getPullRequestNumbers = async basehead => {
@@ -58,8 +59,11 @@ const getPullRequestNumbers = async basehead => {
 };
 
 const loadPullRequests = pullRequestNumbers =>
-  Promise.all(pullRequestNumbers.map(
-    async pullRequestNumber => {
+  pullRequestNumbers.reduce(
+    async (resultP, pullRequestNumber) => {
+      await resultP;
+      core.debug(`loading ${pullRequestNumber}`);
+
       const { data: { html_url: url, title, body, labels, user } } = await octokit.rest.pulls.get({
         ...repo,
         pull_number: pullRequestNumber,
@@ -79,45 +83,72 @@ const loadPullRequests = pullRequestNumbers =>
         if (items.some(({ number }) => number === item.number))
           return;
 
-        items.push(item);
+        items.unshift(item);
       });
+      core.debug(`${pullRequestNumber} is added`);
     },
-  ));
+    Promise.resolve(),
+  );
 
-const renderRelease = nextVersion => [
-  `## ${nextVersion} - (${format(new Date(), 'yyyy-mm-dd')})`,
-  ...Object.keys(releaseInfo)
-    .filter(key => releaseInfo[key].items.length !== 0)
-    .map(key => [
-      '',
-      `#### ${releaseInfo[key].title}`,
-      ...releaseInfo[key].items.map(
-        ({ number, url, title, user }) => [
-          '*',
-          // TODO: should add domain
-          `[#${number}](${url})`,
-          title,
-          `([${user.login}](${user.html_url}))`,
-        ].join(' '),
-      ),
-    ].join('\n')),
-].join('\n');
+const renderRelease = nextVersion => {
+  const release = [
+    // FIXME: date should be same as tag
+    `## ${nextVersion} (${format(new Date(), 'yyyy-mm-dd')})`,
+    ...Object.keys(releaseInfo)
+      .filter(key => releaseInfo[key].items.length !== 0)
+      .map(key => [
+        '',
+        `#### ${releaseInfo[key].title}`,
+        ...releaseInfo[key].items.map(
+          ({ number, url, title, user }) => [
+            '-',
+            `[#${number}](${url})`,
+            title.replace(/[ ]+$/, ''),
+            `([@${user.login}](${user.html_url}))`,
+          ].join(' '),
+        ),
+      ].join('\n')),
+  ].join('\n');
+
+  Object.keys(releaseInfo)
+    .forEach(key => {
+      releaseInfo[key].items = [];
+    });
+  core.debug(`new release: ${nextVersion}`);
+
+  return release;
+};
 
 (async () => {
   try {
-    const from = await getFrom(core.getInput('from'));
-    const to = core.getInput('to');
-
     initializeRelease(core.getInput('config'));
-    await loadPullRequests(
-      await getPullRequestNumbers(`${from}...${to}`),
-    );
 
-    // core.setOutput(
-    console.log(
-      'changelog',
-      renderRelease(core.getInput('next version'), releaseInfo),
-    );
+    const releases = await core.getMultilineInput('tags')
+      .reduce(async (resultP, tag, index, tags) => {
+        const result = await resultP;
+
+        if (index === 0)
+          return result;
+
+        const from = await getFrom(tags[index - 1]);
+
+        core.debug(`generating a release from ${from} to ${tag}`);
+        await loadPullRequests(
+          await getPullRequestNumbers(`${from}...${tag}`),
+        );
+
+        return [
+          ...result,
+          '',
+          renderRelease(
+            tag === 'HEAD'
+              ? core.getInput('next version')
+              : tag,
+          ),
+        ];
+      }, Promise.resolve([]));
+
+    console.log(releases.reverse().join('\n'));
   } catch (e) {
     core.setFailed(e.message);
   }
