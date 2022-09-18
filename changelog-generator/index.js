@@ -7,8 +7,10 @@ const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 const releaseInfo = {};
 
 // TODO: support monorepo
-const initializeRelease = configStr => {
-  const config = JSON.parse(configStr);
+const initializeRelease = () => {
+  const config = JSON.parse(
+    core.getInput('config'),
+  );
 
   Object.keys(config)
     .forEach(key => {
@@ -29,7 +31,9 @@ const getFrom = async from => {
   if (from !== 'latest tag')
     return from;
 
-  const { data: [{ name } = {}] } = await octokit.rest.repos.listTags(repo);
+  const {
+    data: [{ name } = {}],
+  } = await octokit.rest.repos.listTags(repo);
 
   if (!name)
     throw new Error('Here should have at least one tag');
@@ -64,7 +68,9 @@ const loadPullRequests = pullRequestNumbers =>
       await resultP;
       core.debug(`loading ${pullRequestNumber}`);
 
-      const { data: { html_url: url, title, body, labels, user } } = await octokit.rest.pulls.get({
+      const {
+        data: { html_url: url, title, body, labels, user },
+      } = await octokit.rest.pulls.get({
         ...repo,
         pull_number: pullRequestNumber,
       });
@@ -166,7 +172,7 @@ const renderRelease = async tag => {
 
 (async () => {
   try {
-    initializeRelease(core.getInput('config'));
+    initializeRelease();
 
     const releases = await core.getMultilineInput('tags')
       .reduce(async (resultP, tag, index, tags) => {
