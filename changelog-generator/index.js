@@ -25,21 +25,25 @@ const getPullRequestNumbers = async basehead => {
   }, []);
 };
 
-const getPullRequests = async () => {
-  const { data: pullRequests } = await octokit.rest.pulls.list({
-    ...repo,
-    state: 'all',
-  });
+const getPullRequests = pullRequestNumbers =>
+  Promise.all(pullRequestNumbers.map(
+    async pullRequestNumber => {
+      const { data: { title, body } } = await octokit.rest.pulls.get({
+        ...repo,
+        pull_number: pullRequestNumber,
+      });
 
-  pullRequests.forEach(({ title, body, state }) => {
-    // console.log(title, body, state);
-  });
-}
+      return { title, body };
+    },
+  ));
 
 (async () => {
   try {
     // TODO: should remove basehead
-    console.log(await getPullRequestNumbers('v1.0.0...HEAD'));
+    const pullRequestNumbers = await getPullRequestNumbers('v1.0.0...HEAD');
+    const pullRequests = await getPullRequests(pullRequestNumbers);
+
+    console.log(pullRequests)
   } catch (e) {
     core.setFailed(e.message);
   }
