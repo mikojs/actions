@@ -2,3 +2,6 @@
 *.swp
 *.log
 .DS_Store
+
+# yarn
+node_modules
