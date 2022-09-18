@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { format } = require('date-fns');
 
 const { repo } = github.context;
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
@@ -80,24 +81,24 @@ const loadPullRequests = pullRequestNumbers =>
     },
   ));
 
+const renderRelease = nextVersion => [
+  `## ${nextVersion} - (${format(new Date(), 'yyyy-mm-dd')})`,
+].join('\n');
+
 (async () => {
   try {
-    // TODO: should remove default value
-    const from = await getFrom(core.getInput('from') || 'latest tag');
-    const to = core.getInput('to') || 'HEAD';
+    const from = await getFrom(core.getInput('from'));
+    const to = core.getInput('to');
 
-    initializeRelease(core.getInput('config') || JSON.stringify({
-      'PR: Breaking Change :boom:': ':boom: Breaking Change',
-      'PR: New Feature :rocket:': ':rocket: New Feature',
-      'PR: Bug Fix :bug:': ':bug: Bug Fix',
-      'PR: Docs :memo:': ':memo: Documentation',
-      'PR: Internal :house:': ':house: Internal',
-    }));
+    initializeRelease(core.getInput('config'));
     await loadPullRequests(
       await getPullRequestNumbers(`${from}...${to}`),
     );
 
-    console.log(releaseInfo);
+    core.setOutput(
+      'changelog',
+      renderRelease(core.getInput('next version'), releaseInfo),
+    );
   } catch (e) {
     core.setFailed(e.message);
   }
