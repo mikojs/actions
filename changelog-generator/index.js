@@ -4,12 +4,7 @@ const { format } = require('date-fns');
 
 const { repo } = github.context;
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-const releaseInfo = {
-  uncategorized: {
-    title: ':question: Uncategorized',
-    items: [],
-  },
-};
+const releaseInfo = {};
 
 const getFrom = async from => {
   if (from !== 'latest tag')
@@ -33,6 +28,12 @@ const initializeRelease = configStr => {
         items: [],
       };
     });
+
+  if (!releaseInfo.uncategorized)
+    releaseInfo.uncategorized = {
+      title: ':question: Uncategorized',
+      items: [],
+    };
 };
 
 const getPullRequestNumbers = async basehead => {
@@ -59,13 +60,15 @@ const getPullRequestNumbers = async basehead => {
 const loadPullRequests = pullRequestNumbers =>
   Promise.all(pullRequestNumbers.map(
     async pullRequestNumber => {
-      const { data: { title, body, labels, user } } = await octokit.rest.pulls.get({
+      const { data: { html_url: url, title, body, labels, user } } = await octokit.rest.pulls.get({
         ...repo,
         pull_number: pullRequestNumber,
       });
       const item = {
         number: pullRequestNumber,
+        url,
         title,
+        // TODO: body could overwrite title
         body,
         user,
       };
@@ -83,6 +86,21 @@ const loadPullRequests = pullRequestNumbers =>
 
 const renderRelease = nextVersion => [
   `## ${nextVersion} - (${format(new Date(), 'yyyy-mm-dd')})`,
+  ...Object.keys(releaseInfo)
+    .filter(key => releaseInfo[key].items.length !== 0)
+    .map(key => [
+      '',
+      `#### ${releaseInfo[key].title}`,
+      ...releaseInfo[key].items.map(
+        ({ number, url, title, user }) => [
+          '*',
+          // TODO: should add domain
+          `[#${number}](${url})`,
+          title,
+          `([${user.login}](${user.html_url}))`,
+        ].join(' '),
+      ),
+    ].join('\n')),
 ].join('\n');
 
 (async () => {
@@ -95,7 +113,8 @@ const renderRelease = nextVersion => [
       await getPullRequestNumbers(`${from}...${to}`),
     );
 
-    core.setOutput(
+    // core.setOutput(
+    console.log(
       'changelog',
       renderRelease(core.getInput('next version'), releaseInfo),
     );
