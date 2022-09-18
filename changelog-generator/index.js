@@ -5,10 +5,11 @@ const { format } = require('date-fns');
 const { repo } = github.context;
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 const releaseInfo = {};
+const workspacesInfo = {};
 
 // TODO: support monorepo
 const initializeRelease = () => {
-  const { labels } = JSON.parse(
+  const { workspaces, labels } = JSON.parse(
     core.getInput('config'),
   );
 
@@ -18,6 +19,10 @@ const initializeRelease = () => {
         title: labels[key],
         items: [],
       };
+    });
+  Object.keys(workspaces)
+    .forEach(key => {
+      workspacesInfo[workspaces[key]] = key;
     });
 
   if (!releaseInfo.uncategorized)
@@ -74,6 +79,12 @@ const loadPullRequests = pullRequestNumbers =>
         ...repo,
         pull_number: pullRequestNumber,
       });
+      const {
+        data,
+      } = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}/files', {
+        ...repo,
+        pull_number: pullRequestNumber,
+      });
       const item = {
         number: pullRequestNumber,
         url,
@@ -81,8 +92,20 @@ const loadPullRequests = pullRequestNumbers =>
         // TODO: body could overwrite title
         body,
         user,
+        workspaces: data.reduce(
+          (result, { filename }) => {
+            const key = Object.keys(workspacesInfo)
+              .find(worksapcesPath => filename.includes(worksapcesPath));
+
+            return !key || result.includes(workspacesInfo[key])
+              ? result
+              : [...result, workspacesInfo[key]];
+          },
+          [],
+        ),
       };
 
+      core.debug(item);
       labels.forEach(({ name }) => {
         const { items } = (releaseInfo[name] || releaseInfo.uncategorized);
 
