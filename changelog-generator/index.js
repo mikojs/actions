@@ -90,10 +90,55 @@ const loadPullRequests = pullRequestNumbers =>
     Promise.resolve(),
   );
 
-const renderRelease = nextVersion => {
+const getTagDate = async tag => {
+  const {
+    repository: {
+      ref: { target },
+    },
+  } = await octokit.graphql(`
+    query getTagDate($owner: String!, $repo: String!, $qualifiedName: String!) {
+      repository(owner: $owner, name: $repo) {
+        ref(qualifiedName: $qualifiedName) {
+          id
+          target {
+            typename: __typename
+            ... on Tag {
+              id
+              tagger {
+                date
+              }
+            }
+            ... on Commit {
+              id
+              committer {
+                date
+              }
+            }
+          }
+        }
+      }
+    }
+  `, {
+    ...repo,
+    qualifiedName: `refs/tags/${tag}`,
+  });
+
+  return new Date(
+    target.typename === 'Tag'
+      ? target.tagger.date
+      : target.committer.date,
+  );
+};
+
+const renderRelease = async tag => {
+  const nextVersion = tag === 'HEAD'
+    ? core.getInput('next version')
+    : tag;
+  const date = tag === 'HEAD'
+    ? new Date()
+    : await getTagDate(tag);
   const release = [
-    // FIXME: date should be same as tag
-    `## ${nextVersion} (${format(new Date(), 'yyyy-mm-dd')})`,
+    `## ${nextVersion} (${format(date, 'yyyy-MM-dd')})`,
     ...Object.keys(releaseInfo)
       .filter(key => releaseInfo[key].items.length !== 0)
       .map(key => [
@@ -114,7 +159,7 @@ const renderRelease = nextVersion => {
     .forEach(key => {
       releaseInfo[key].items = [];
     });
-  core.debug(`new release: ${nextVersion}`);
+  core.info(release);
 
   return release;
 };
@@ -140,15 +185,11 @@ const renderRelease = nextVersion => {
         return [
           ...result,
           '',
-          renderRelease(
-            tag === 'HEAD'
-              ? core.getInput('next version')
-              : tag,
-          ),
+          await renderRelease(tag),
         ];
       }, Promise.resolve([]));
 
-    console.log(releases.reverse().join('\n'));
+    core.setOutput('relesae', releases.reverse().join('\n'));
   } catch (e) {
     core.setFailed(e.message);
   }
