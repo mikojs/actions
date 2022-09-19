@@ -27,7 +27,7 @@ const renderRelease = require('./renderRelease');
         ];
       }, Promise.resolve([]));
 
-    core.setOutput('relesae', releases.reverse().join('\n'));
+    core.setOutput('output', releases.reverse().join('\n'));
   } catch (e) {
     core.setFailed(e.message);
   }
