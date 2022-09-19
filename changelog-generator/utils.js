@@ -1,7 +1,4 @@
 const github = require('@actions/github');
 
-const { repo } = github.context;
-const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-
-exports.repo = repo;
-exports.octokit = octokit;
+exports.repo = github.context.repo;
+exports.octokit = github.getOctokit(process.env.GITHUB_TOKEN);
