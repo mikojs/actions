@@ -105,6 +105,9 @@ const loadPullRequests = pullRequestNumbers =>
         ),
       };
 
+      if (item.workspaces.length === 0)
+        item.workspaces.push('notFound');
+
       core.debug(item);
       labels.forEach(({ name }) => {
         const { items } = (releaseInfo[name] || releaseInfo.uncategorized);
@@ -166,6 +169,7 @@ const renderRelease = async tag => {
   const date = tag === 'HEAD'
     ? new Date()
     : await getTagDate(tag);
+  const useWorkspaces = Object.keys(workspacesInfo).length !== 0;
   const release = [
     `## ${nextVersion} (${format(date, 'yyyy-MM-dd')})`,
     ...Object.keys(releaseInfo)
