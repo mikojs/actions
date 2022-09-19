@@ -3,7 +3,7 @@ const core = require('@actions/core');
 const releaseInfo = {
   labels: {},
 };
-const { workspaces, labels } = JSON.parse(
+const { workspaces = {}, labels = {} } = JSON.parse(
   core.getInput('config'),
 );
 

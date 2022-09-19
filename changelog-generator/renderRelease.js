@@ -49,6 +49,7 @@ const renderLabel = ({ title, items }) =>
     : [
         '',
         `#### ${title}`,
+        '',
         ...renderItemsWithWorkspaces(items),
       ];
 
