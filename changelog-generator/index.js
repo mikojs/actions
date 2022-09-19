@@ -1,9 +1,8 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
 const { format } = require('date-fns');
 
-const { repo } = github.context;
-const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+const { repo, octokit, getFrom } = require('./utils');
+
 const releaseInfo = {};
 const workspacesInfo = {};
 
@@ -30,20 +29,6 @@ const initializeRelease = () => {
       title: ':question: Uncategorized',
       items: [],
     };
-};
-
-const getFrom = async from => {
-  if (from !== 'latest tag')
-    return from;
-
-  const {
-    data: [{ name } = {}],
-  } = await octokit.rest.repos.listTags(repo);
-
-  if (!name)
-    throw new Error('Here should have at least one tag');
-
-  return name;
 };
 
 const getPullRequestNumbers = async basehead => {
