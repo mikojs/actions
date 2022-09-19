@@ -8,7 +8,6 @@ const { workspaces, labels } = JSON.parse(
 );
 
 releaseInfo.workspaces = workspaces;
-releaseInfo.useWorksapces = workspaces.length === 0;
 
 Object.keys(labels)
   .forEach(key => {

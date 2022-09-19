@@ -31,7 +31,8 @@ module.exports = pullRequestNumbers =>
         workspaces: data.reduce(
           (result, { filename }) => {
             const key = Object.entries(releaseInfo.workspaces)
-              .find(([, worksapcesPath]) => filename.includes(worksapcesPath));
+              .find(([, worksapcesPath]) => filename.includes(worksapcesPath))
+              ?.[0];
 
             return !key || result.includes(key)
               ? result
@@ -42,7 +43,7 @@ module.exports = pullRequestNumbers =>
       };
 
       if (item.workspaces.length === 0)
-        item.workspaces.push('notFound');
+        item.workspaces.push('Other');
 
       core.debug(item);
       labels.forEach(({ name }) => {
