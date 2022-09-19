@@ -1,11 +1,11 @@
 name: Build docker image
 
-env:
-  REGISTRY: ghcr.io/mikojs
-
 on:
   workflow_call:
     inputs:
+      registry:
+        type: string
+        default: mikojs
       name:
         required: true
         type: string
@@ -36,16 +36,16 @@ jobs:
         with:
           name: ${{ inputs.cache_name }}
           path: ${{ inputs.cache_path }}
-      - uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+      - uses: docker/login-action@v2
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      - uses: docker/metadata-action@v2
         id: meta
         with:
-          images: ${{ env.REGISTRY }}/${{ inputs.name }}
-      - uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+          images: ghcr.io/${{ inputs.registry }}/${{ inputs.name }}
+      - uses: docker/build-push-action@v2
         with:
           context: ${{ inputs.context }}
           file: ${{ inputs.file }}
