@@ -8,7 +8,7 @@ inputs:
     default: |
       last version
       HEAD
-  next-versoin:
+  next-version:
     description: The new next version is used to replace the `unreleased` tag.
     default: Unreleased
   config:
