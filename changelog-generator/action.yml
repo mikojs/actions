@@ -1,0 +1,22 @@
+name: Changelog generator
+description: Generate the changelog.
+inputs:
+  tags:
+    description: |
+      The tags array is used to generate the changelog.
+      This must be an array of at least two elements.
+    default:
+      - latest version
+      - HEAD
+  next-versoin:
+    description: The new next version is used to replace the `unreleased` tag.
+    default: Unreleased
+  config:
+    description: The config is used to set up the changelog.
+    required: true
+outputs:
+  release:
+    description: The changelog content is used for the new release.
+runs:
+  using: node16
+  main: index.js
