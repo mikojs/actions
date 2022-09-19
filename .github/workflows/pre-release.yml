@@ -1,11 +1,38 @@
-name: Release
+name: Pre-release
+
+on:
+  workflow_call:
+    inputs:
+      workspaces:
+        type: string
+        default: "{}"
 
 jobs:
   pre-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: generate changelog.md
-      - uses: upgrade version on config
-      - uses: add release git tag
-      - uses: remove pre-release git tag
+      - name: Set up release version
+        run: |
+          VERSION=$(echo "${{ GITHUB_REF_NAME }}" | sed s/pre-/v/)
+          echo '::set-output name=output::$VERSION'
+        id: version
+      - uses: mikojs/actions/changelog-generator@use-changelog-generator
+        with:
+          next-version: ${{ steps.version.output }}
+          config: "{
+            \"workspaces\": ${{ inputs.workspaces }}
+            \"labels\": {
+              \"PR: Breaking Change :boom:\": \":boom: Breaking Change\",
+              \"PR: New Feature :rocket:\": \":rocket: New Feature\",
+              \"PR: Bug Fix :bug:\": \":bug: Bug Fix\",
+              \"PR: Docs :memo:\": \":memo: Documentation\",
+              \"PR: Internal :house:\": \":house: Internal\"
+            }
+          }"
+        id: release
+      - run: |
+          echo "upgrade version on config"
+          echo ${{ steps.release.output }}
+      - run: echo "add release git tag"
+      - run: echo "remove pre-release git tag"
