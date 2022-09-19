@@ -1,7 +1,8 @@
 const core = require('@actions/core');
 const { format } = require('date-fns');
 
-const { repo, octokit, getFrom } = require('./utils');
+const { repo, octokit } = require('./utils');
+const { getFrom, getPullRequestNumbers, getTagDate } = require('./getInfo');
 
 const releaseInfo = {};
 const workspacesInfo = {};
@@ -29,27 +30,6 @@ const initializeRelease = () => {
       title: ':question: Uncategorized',
       items: [],
     };
-};
-
-const getPullRequestNumbers = async basehead => {
-  const { data: { commits } } = await octokit.request(
-    'GET /repos/{owner}/{repo}/compare/{basehead}', {
-      ...repo,
-      basehead,
-    },
-  );
-
-  return commits.reduce((result, { commit: { message }}) => {
-    const pullRequestNumber = message
-      .replace(/\*.+/g, '')
-      .match(/\(#\d+\)/)
-      ?.[0]
-      .replace(/\(#(.+)\)/, (_, p1) => p1);
-
-    return !pullRequestNumber
-      ? result
-      : [...result, pullRequestNumber];
-  }, []);
 };
 
 const loadPullRequests = pullRequestNumbers =>
@@ -106,46 +86,6 @@ const loadPullRequests = pullRequestNumbers =>
     },
     Promise.resolve(),
   );
-
-const getTagDate = async tag => {
-  const {
-    repository: {
-      ref: { target },
-    },
-  } = await octokit.graphql(`
-    query getTagDate($owner: String!, $repo: String!, $qualifiedName: String!) {
-      repository(owner: $owner, name: $repo) {
-        ref(qualifiedName: $qualifiedName) {
-          id
-          target {
-            typename: __typename
-            ... on Tag {
-              id
-              tagger {
-                date
-              }
-            }
-            ... on Commit {
-              id
-              committer {
-                date
-              }
-            }
-          }
-        }
-      }
-    }
-  `, {
-    ...repo,
-    qualifiedName: `refs/tags/${tag}`,
-  });
-
-  return new Date(
-    target.typename === 'Tag'
-      ? target.tagger.date
-      : target.committer.date,
-  );
-};
 
 const renderRelease = async tag => {
   const nextVersion = tag === 'HEAD'
