@@ -30,6 +30,16 @@ jobs:
       context: ./.github/tests
       file: ./.github/tests/Dockerfile.${{ matrix.name }}
 
+  pre-release:
+    uses: ./.github/workflows/pre-release.yml
+    strategy:
+      matrix:
+        include:
+          - config: "{}"
+          - config: "{
+              \"changelog-generator\": \"changelog-generator\"
+            }"
+
   final-check:
     runs-on: ubuntu-latest
     needs: build-docker
