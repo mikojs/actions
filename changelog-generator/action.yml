@@ -5,9 +5,9 @@ inputs:
     description: |
       The tags array is used to generate the changelog.
       This must be an array of at least two elements.
-    default:
-      - latest version
-      - HEAD
+    default: |
+      last version
+      HEAD
   next-versoin:
     description: The new next version is used to replace the `unreleased` tag.
     default: Unreleased
