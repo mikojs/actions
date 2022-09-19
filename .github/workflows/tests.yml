@@ -12,6 +12,11 @@ jobs:
         with:
           name: cache
           path: ./cache
+      - run: tar -cvf cache cache.tar
+      - uses: actions/upload-artifact@v3
+        with:
+          name: cache-tar
+          path: ./cache.tar
 
   build-docker:
     uses: ./.github/workflows/build-docker.yml
@@ -23,6 +28,9 @@ jobs:
           - name: with-cache
             cache_name: cache
             cache_path: ./.github/tests/cache
+          - name: with-cache-tar
+            cache_name: cache-tar
+            cache_path: ./.github/tests/cache.tar
     with:
       name: ${{ matrix.name }}
       cache_name: ${{ matrix.cache_name }}

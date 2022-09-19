@@ -37,7 +37,7 @@ jobs:
           name: ${{ inputs.cache_name }}
           path: ${{ inputs.cache_path }}
       - run: tar -xvf ${{ inputs.cache_path }} && rm -rf ${{ inputs.cache_path }}
-        if: ${{ inputs.cache_path != '' && inputs.cache_path != '' }}
+        if: ${{ inputs.cache_path != '' && inputs.cache_path != '' }} && endsWith(${{ inputs.cache_path}}, '.tar')
       - uses: docker/login-action@v2
         with:
           registry: ghcr.io
