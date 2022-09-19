@@ -3,34 +3,7 @@ const { format } = require('date-fns');
 
 const { repo, octokit } = require('./utils');
 const { getFrom, getPullRequestNumbers, getTagDate } = require('./getInfo');
-
-const releaseInfo = {};
-const workspacesInfo = {};
-
-// TODO: support monorepo
-const initializeRelease = () => {
-  const { workspaces, labels } = JSON.parse(
-    core.getInput('config'),
-  );
-
-  Object.keys(labels)
-    .forEach(key => {
-      releaseInfo[key] = {
-        title: labels[key],
-        items: [],
-      };
-    });
-  Object.keys(workspaces)
-    .forEach(key => {
-      workspacesInfo[workspaces[key]] = key;
-    });
-
-  if (!releaseInfo.uncategorized)
-    releaseInfo.uncategorized = {
-      title: ':question: Uncategorized',
-      items: [],
-    };
-};
+const releaseInfo = require('./releaseInfo');
 
 const loadPullRequests = pullRequestNumbers =>
   pullRequestNumbers.reduce(
@@ -94,7 +67,6 @@ const renderRelease = async tag => {
   const date = tag === 'HEAD'
     ? new Date()
     : await getTagDate(tag);
-  const useWorkspaces = Object.keys(workspacesInfo).length !== 0;
   const release = [
     `## ${nextVersion} (${format(date, 'yyyy-MM-dd')})`,
     ...Object.keys(releaseInfo)
@@ -113,10 +85,7 @@ const renderRelease = async tag => {
       ].join('\n')),
   ].join('\n');
 
-  Object.keys(releaseInfo)
-    .forEach(key => {
-      releaseInfo[key].items = [];
-    });
+  releaseInfo.reset();
   core.info(release);
 
   return release;
@@ -124,8 +93,6 @@ const renderRelease = async tag => {
 
 (async () => {
   try {
-    initializeRelease();
-
     const releases = await core.getMultilineInput('tags')
       .reduce(async (resultP, tag, index, tags) => {
         const result = await resultP;
