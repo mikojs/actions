@@ -3,6 +3,9 @@ name: Build docker image
 on:
   workflow_call:
     inputs:
+      registry:
+        type: string
+        default: mikojs
       name:
         required: true
         type: string
@@ -41,7 +44,7 @@ jobs:
       - uses: docker/metadata-action@v2
         id: meta
         with:
-          images: ghcr.io/mikojs/${{ inputs.name }}
+          images: ghcr.io/${{ inputs.registry }}/${{ inputs.name }}
       - uses: docker/build-push-action@v2
         with:
           context: ${{ inputs.context }}
