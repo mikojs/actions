@@ -26,7 +26,7 @@ on:
         default: false
 
 jobs:
-  build-and-push-images:
+  build-and-push-image:
     runs-on: ubuntu-latest
     permissions:
       contents: read
