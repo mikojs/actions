@@ -26,15 +26,17 @@ jobs:
         include:
           - name: base
           - name: with-cache
-            cache_name: cache
-            cache_path: ./.github/tests/cache
+            cache-name: cache
+            cache-path: ./.github/tests/cache
           - name: with-cache-tar
-            cache_name: cache-tar
-            cache_path: ./.github/tests/cache.tar
+            cache-name: cache-tar
+            cache-path: ./.github/tests/cache.tar
+            pre-build: ls -al ./.github/tests && tar -xvf ./.github/tests/cache.tar
     with:
       name: ${{ matrix.name }}
-      cache_name: ${{ matrix.cache_name }}
-      cache_path: ${{ matrix.cache_path }}
+      cache-name: ${{ matrix.cache_name }}
+      cache-path: ${{ matrix.cache-path }}
+      pre-build: ${{ matrix.pre-build }}
       context: ./.github/tests
       file: ./.github/tests/Dockerfile.${{ matrix.name }}
 
