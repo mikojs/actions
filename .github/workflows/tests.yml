@@ -24,19 +24,16 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: base
-          - name: with-cache
-            cache-name: cache
-          - name: with-cache
-            cache-name: cache-tar
+          - cache-name: cache
+          - cache-name: cache-tar
             pre-build: tar -xvf ./.github/tests/build-docker/cache.tar -C ./.github/tests/build-docker
     with:
-      name: mikojs/${{ matrix.name }}
+      name: mikojs/build-docker
       cache-name: ${{ matrix.cache-name }}
       cache-path: ./.github/tests/build-docker
       pre-build: ${{ matrix.pre-build }}
       context: ./.github/tests/build-docker
-      file: ./.github/tests/build-docker/Dockerfile.${{ matrix.name }}
+      file: ./.github/tests/build-docker/Dockerfile
 
   build-rust:
     uses: ./.github/workflows/build-rust.yml
