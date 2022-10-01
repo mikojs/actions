@@ -52,7 +52,7 @@ jobs:
         with:
           name: rust
       - run: tar -xvf ./rust.tar
-      - run: test "$(./rust/build-rust)" == "hello world" || exit 1
+      - run: test "$(./rust/build-rust)" == "Hello, world!" || exit 1
 
   final-check:
     runs-on: ubuntu-latest
