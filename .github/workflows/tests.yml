@@ -52,7 +52,7 @@ jobs:
         with:
           name: rust
       - run: tar -xvf ./release.tar
-      - run: test "$(./release)" == "hello world" || echo "::error title=rust::run command fail"
+      - run: test "$(./release/build-rust)" == "hello world" || echo "::error title=rust::run command fail"
 
   final-check:
     runs-on: ubuntu-latest
