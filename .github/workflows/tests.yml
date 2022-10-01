@@ -38,8 +38,24 @@ jobs:
       context: ./.github/tests/build-docker
       file: ./.github/tests/build-docker/Dockerfile.${{ matrix.name }}
 
+  build-rust:
+    uses: ./.github/workflows/build-rust.yml
+
+  post-build-rust:
+    runs-on: ubuntu-latest
+    needs: build-rust
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: rust
+      - run: tar -xvf ./release.tar
+      - run: test "$(./release)" == "hello world" || echo "::error title=rust::run command fail"
+
   final-check:
     runs-on: ubuntu-latest
-    needs: build-docker
+    needs:
+      - build-docker
+      - post-build-rust
     steps:
       - uses: actions/checkout@v3
