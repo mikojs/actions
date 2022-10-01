@@ -7,16 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: echo "cache" >> cache
+      - run: echo "cache" >> ./.github/tests/build-docker/cache
       - uses: actions/upload-artifact@v3
         with:
           name: cache
-          path: ./cache
-      - run: tar -cvf cache.tar cache
+          path: ./.github/tests/build-docker/cache
+      - run: tar -cvf cache.tar ./.github/tests/build-docker/cache
       - uses: actions/upload-artifact@v3
         with:
-          name: cache-tar
-          path: ./cache.tar
+          name: cache.tar
+          path: cache.tar
 
   build-docker:
     uses: ./.github/workflows/build-docker.yml
@@ -24,14 +24,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - cache-name: cache
-          - cache-name: cache-tar
-            pre-build: tar -xvf ./.github/tests/build-docker/cache.tar -C ./.github/tests/build-docker
+          - cache: cache
+          - cache: cache.tar
     with:
+      cache: ${{ matrix.cache-name }}
       name: mikojs/build-docker
-      cache-name: ${{ matrix.cache-name }}
-      cache-path: ./.github/tests/build-docker
-      pre-build: ${{ matrix.pre-build }}
       context: ./.github/tests/build-docker
       file: ./.github/tests/build-docker/Dockerfile
 
