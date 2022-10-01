@@ -24,22 +24,37 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: base
-          - name: with-cache
-            cache-name: cache
-          - name: with-cache
-            cache-name: cache-tar
-            pre-build: tar -xvf ./.github/tests/cache.tar -C ./.github/tests
+          - cache-name: cache
+          - cache-name: cache-tar
+            pre-build: tar -xvf ./.github/tests/build-docker/cache.tar -C ./.github/tests/build-docker
     with:
-      name: mikojs/${{ matrix.name }}
+      name: mikojs/build-docker
       cache-name: ${{ matrix.cache-name }}
-      cache-path: ./.github/tests
+      cache-path: ./.github/tests/build-docker
       pre-build: ${{ matrix.pre-build }}
-      context: ./.github/tests
-      file: ./.github/tests/Dockerfile.${{ matrix.name }}
+      context: ./.github/tests/build-docker
+      file: ./.github/tests/build-docker/Dockerfile
+
+  build-rust:
+    uses: ./.github/workflows/build-rust.yml
+    with:
+      manifest-path: ./.github/tests/build-rust/Cargo.toml
+
+  post-build-rust:
+    runs-on: ubuntu-latest
+    needs: build-rust
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: rust
+      - run: tar -xvf ./rust.tar
+      - run: test "$(./rust/build-rust)" == "Hello, world!" || exit 1
 
   final-check:
     runs-on: ubuntu-latest
-    needs: build-docker
+    needs:
+      - build-docker
+      - post-build-rust
     steps:
       - uses: actions/checkout@v3
