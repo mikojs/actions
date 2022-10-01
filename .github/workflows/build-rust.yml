@@ -1,0 +1,35 @@
+name: Build rust project
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        type: string
+        default: rust
+      path:
+        type: string
+        default: release
+
+jobs:
+  build-rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-unknown-linux-musl
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --target x86_64-unknown-linux-musl
+      - run: mkdir ./${{ inputs.path }}
+      - run: find ./target/x86_64-unknown-linux-musl/release -type f -maxdepth 1 -executable -exec cp {} ./${{ inputs.path }} \;
+      - run: tar -cvf ${{ inputs.name }}.tar ${{ inputs.path }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.name }}
+          path: ./${{ inputs.name }}.tar
