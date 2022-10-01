@@ -28,8 +28,8 @@ jobs:
         if: ${{ inputs.cache }}
         with:
           name: ${{ inputs.cache }}
-      - if: ${{ endsWith(inputs.name, '.tar') }}
-        run: tar -xcf ${{ inputs.name }}
+      - if: ${{ endsWith(inputs.cache, '.tar') }}
+        run: tar -xcf ${{ inputs.cache }}
       - uses: docker/login-action@v2
         with:
           registry: ghcr.io
