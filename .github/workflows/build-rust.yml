@@ -9,6 +9,8 @@ on:
       path:
         type: string
         default: release
+      args:
+        type: string
 
 jobs:
   build-rust:
@@ -22,10 +24,11 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: test
+          args: ${{ inputs.args }}
       - uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --target x86_64-unknown-linux-musl
+          args: --release --target x86_64-unknown-linux-musl ${{ inputs.args }}
       - run: mkdir ./${{ inputs.path }}
       - run: find ./target/x86_64-unknown-linux-musl/release -type f -maxdepth 1 -executable -exec cp {} ./${{ inputs.path }} \;
       - run: tar -cvf ${{ inputs.name }}.tar ${{ inputs.path }}

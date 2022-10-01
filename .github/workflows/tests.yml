@@ -40,6 +40,8 @@ jobs:
 
   build-rust:
     uses: ./.github/workflows/build-rust.yml
+    with:
+      args: --manifest-path ./.github/tests/build-rust/Cargo.toml
 
   post-build-rust:
     runs-on: ubuntu-latest
