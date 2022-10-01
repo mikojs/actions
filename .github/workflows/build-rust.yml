@@ -26,9 +26,16 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --target x86_64-unknown-linux-musl --target ./_${{ inputs.name }} --manifest-path ${{ inputs.manifest-path }}
+          args: --release \
+            --target x86_64-unknown-linux-musl \
+            --target-dir ./_${{ inputs.name }} \
+            --manifest-path ${{ inputs.manifest-path }}
       - run: mkdir ./${{ inputs.name }}
-      - run: find ./_${{ inputs.name }}/x86_64-unknown-linux-musl/release -type f -maxdepth 1 -executable -exec cp {} ./${{ inputs.name }} \;
+      - run: find ./_${{ inputs.name }}/x86_64-unknown-linux-musl/release \
+        -type f \
+        -maxdepth 1 \
+        -executable \
+        -exec cp {} ./${{ inputs.name }} \;
       - run: tar -cvf ${{ inputs.name }}.tar ${{ inputs.name }}
       - uses: actions/upload-artifact@v3
         with:
