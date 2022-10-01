@@ -41,7 +41,7 @@ jobs:
   build-rust:
     uses: ./.github/workflows/build-rust.yml
     with:
-      args: --manifest-path ./.github/tests/build-rust/Cargo.toml
+      manifest-path: ./.github/tests/build-rust/Cargo.toml
 
   post-build-rust:
     runs-on: ubuntu-latest
@@ -51,8 +51,8 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: rust
-      - run: tar -xvf ./release.tar
-      - run: test "$(./release/build-rust)" == "hello world" || echo "::error title=rust::run command fail"
+      - run: tar -xvf ./rust.tar
+      - run: test "$(./rust/build-rust)" == "hello world" || echo "::error title=rust::run command fail"
 
   final-check:
     runs-on: ubuntu-latest
