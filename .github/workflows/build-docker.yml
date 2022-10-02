@@ -30,7 +30,7 @@ jobs:
           name: ${{ inputs.cache }}
           path: ${{ inputs.context }}
       - if: ${{ endsWith(inputs.cache, '.tar') }}
-        run: tar -xvf ${{ inputs.context }}/${{ inputs.cache }}
+        run: tar -xvf ${{ inputs.context }}/${{ inputs.cache }} -C ${{ inputs.context }}
       - uses: docker/login-action@v2
         with:
           registry: ghcr.io
