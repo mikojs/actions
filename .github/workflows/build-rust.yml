@@ -8,7 +8,7 @@ on:
         required: true
       manifest-path:
         type: string
-        default: .
+        default: ./Cargo.toml
 
 jobs:
   build-rust:
