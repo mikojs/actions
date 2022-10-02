@@ -16,7 +16,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: cache.tar
-          path: cache.tar
+          path: ./cache.tar
 
   build-docker:
     uses: ./.github/workflows/build-docker.yml
@@ -30,7 +30,6 @@ jobs:
       cache: ${{ matrix.cache }}
       name: mikojs/build-docker
       context: ./.github/tests/build-docker
-      file: ./.github/tests/build-docker/Dockerfile
 
   build-rust:
     uses: ./.github/workflows/build-rust.yml
