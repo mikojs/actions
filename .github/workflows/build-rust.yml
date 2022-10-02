@@ -5,7 +5,7 @@ on:
     inputs:
       name:
         type: string
-        default: rust
+        required: true
       manifest-path:
         type: string
         default: .
@@ -29,11 +29,11 @@ jobs:
           args: >
             --release
             --target x86_64-unknown-linux-musl
-            --target-dir ./_${{ inputs.name }}
+            --target-dir ./target
             --manifest-path ${{ inputs.manifest-path }}
       - run: mkdir ./${{ inputs.name }}
       - run: >
-          find ./_${{ inputs.name }}/x86_64-unknown-linux-musl/release
+          find ./target/x86_64-unknown-linux-musl/release
           -type f
           -maxdepth 1
           -executable
@@ -41,5 +41,5 @@ jobs:
       - run: tar -cvf ${{ inputs.name }}.tar ${{ inputs.name }}
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.name }}
+          name: ${{ inputs.name }}.tar
           path: ./${{ inputs.name }}.tar
