@@ -23,9 +23,7 @@ jobs:
     needs: pre-build-docker
     strategy:
       matrix:
-        include:
-          - cache: cache
-          - cache: cache.tar
+        cache: [cache, cache.tar]
     with:
       cache: ${{ matrix.cache }}
       name: mikojs/build-docker
