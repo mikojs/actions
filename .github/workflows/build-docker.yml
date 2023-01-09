@@ -41,7 +41,7 @@ jobs:
         id: meta
         with:
           images: ghcr.io/${{ inputs.name }}
-      - uses: docker/build-push-action@v2
+      - uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.context }}
           file: ${{ inputs.context }}/${{ inputs.file }}
