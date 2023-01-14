@@ -26,7 +26,7 @@ jobs:
         cache: [cache, cache.tar]
     with:
       cache: ${{ matrix.cache }}
-      name: mikojs/build-docker
+      name: mikojs/${{ matrix.cache }}
       context: ./.github/tests/build-docker
 
   build-rust:
