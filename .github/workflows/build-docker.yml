@@ -53,5 +53,5 @@ jobs:
           push: ${{ inputs.push }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=$GITHUB_REF_NAME-${{ inputs.name }}
-          cache-to: type=gha,scope=$GITHUB_REF_NAME-${{ inputs.name }}
+          cache-from: type=gha,scope=${{ github.ref_name }}-${{ inputs.name }}
+          cache-to: type=gha,scope=${{ github.ref_name }}-${{ inputs.name }}
