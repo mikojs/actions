@@ -31,8 +31,8 @@ jobs:
           name: ${{ inputs.cache }}
           path: ${{ inputs.context }}
       - if: ${{ endsWith(inputs.cache, '.tar') }}
-        run: >
-          tar -xvf ${{ inputs.context }}/${{ inputs.cache }} -C ${{ inputs.context }} && \
+        run: |
+          tar -xvf ${{ inputs.context }}/${{ inputs.cache }} -C ${{ inputs.context }}
           rm -rf ${{ inputs.context }}/${{ inputs.cache }}
       - name: Setup Buildx
         id: buildx
