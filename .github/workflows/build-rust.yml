@@ -15,22 +15,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: rustup target add x86_64-unknown-linux-musl
-      - run: cargo test --manifest-path ${{ inputs.manifest-path }}
-      - run: >
+      - name: Setup rust target
+        run: rustup target add x86_64-unknown-linux-musl
+      - name: Test
+        run: cargo test --manifest-path ${{ inputs.manifest-path }}
+      - name: Build
+        run: >
           cargo build
           --release
           --target x86_64-unknown-linux-musl
           --target-dir ./target
           --manifest-path ${{ inputs.manifest-path }}
-      - run: mkdir ./${{ inputs.name }}
-      - run: >
+      - name: Create the cache folder
+        run: mkdir ./${{ inputs.name }}
+      - name: Copy the executable files
+        run: >
           find ./target/x86_64-unknown-linux-musl/release
           -type f
           -maxdepth 1
           -executable
           -exec cp {} ./${{ inputs.name }} \;
-      - run: tar -cvf ${{ inputs.name }}.tar ${{ inputs.name }}
+      - name: Compress the cache folder
+        run: tar -cvf ${{ inputs.name }}.tar ${{ inputs.name }}
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.name }}.tar
