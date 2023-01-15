@@ -18,8 +18,8 @@ on:
         type: boolean
 
 jobs:
-  build-and-push-image:
-    name: Build and push docker image
+  build-docker:
+    name: Build docker
     runs-on: ubuntu-latest
     permissions:
       contents: read
