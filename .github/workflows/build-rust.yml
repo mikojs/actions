@@ -12,6 +12,7 @@ on:
 
 jobs:
   build-rust:
+    name: Build rust code
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
