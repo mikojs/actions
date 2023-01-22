@@ -1,0 +1,5 @@
+{
+  "name": "@mikojs/create-comment",
+  "private": true,
+  "main": "index.js"
+}
