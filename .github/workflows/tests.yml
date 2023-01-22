@@ -21,7 +21,7 @@ jobs:
           path: ./cache.tar
 
   build-docker:
-    uses: ./.github/workflows/build-docker.yml
+    uses: ./workflows/build-docker.yml
     needs: pre-build-docker
     strategy:
       matrix:
@@ -32,7 +32,7 @@ jobs:
       context: ./.github/tests/build-docker
 
   build-rust:
-    uses: ./.github/workflows/build-rust.yml
+    uses: ./workflows/build-rust.yml
     with:
       name: build-rust
       manifest-path: ./.github/tests/build-rust/Cargo.toml
