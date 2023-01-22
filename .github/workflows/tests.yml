@@ -23,7 +23,7 @@ jobs:
 
   build-docker:
     name: Build docker
-    uses: ./workflows/build-docker.yml
+    uses: ./workflows/build-docker.yml@${{ github.ref_name }}
     needs: pre-build-docker
     strategy:
       matrix:
@@ -35,7 +35,7 @@ jobs:
 
   build-rust:
     name: Build rust
-    uses: ./workflows/build-rust.yml
+    uses: ./workflows/build-rust.yml@${{ github.ref_name }}
     with:
       name: build-rust
       manifest-path: ./.github/tests/build-rust/Cargo.toml
