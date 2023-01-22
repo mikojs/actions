@@ -1,9 +1,10 @@
-name: tests
+name: Test workflows
 
 on: [push]
 
 jobs:
   pre-build-docker:
+    name: Pre-build docker
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,6 +22,7 @@ jobs:
           path: ./cache.tar
 
   build-docker:
+    name: Build docker
     uses: ./workflows/build-docker.yml
     needs: pre-build-docker
     strategy:
@@ -32,12 +34,14 @@ jobs:
       context: ./.github/tests/build-docker
 
   build-rust:
+    name: Build rust
     uses: ./workflows/build-rust.yml
     with:
       name: build-rust
       manifest-path: ./.github/tests/build-rust/Cargo.toml
 
   post-build-rust:
+    name: Post-build rust
     runs-on: ubuntu-latest
     needs: build-rust
     steps:
@@ -51,6 +55,7 @@ jobs:
         run: test "$(./build-rust/build-rust)" == "Hello, world!" || exit 1
 
   final-check:
+    name: Final check
     runs-on: ubuntu-latest
     needs:
       - build-docker
