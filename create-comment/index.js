@@ -29,7 +29,7 @@ const octokit = github.getOctokit(token);
 
   if (botCommentExist) return;
 
-  octokit.issues
+  octokit.rest.issues
     .createComment({
       owner,
       repo,
