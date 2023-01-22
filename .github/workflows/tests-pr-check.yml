@@ -1,0 +1,15 @@
+name: Test PR check
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+      - unlabeled
+
+jobs:
+  pr-check:
+    name: PR check
+    uses: ./.github/workflows/pr-check.yml
