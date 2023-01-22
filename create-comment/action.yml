@@ -1,0 +1,13 @@
+name: Create comment
+
+inputs:
+  issue:
+    required: true
+  comment:
+    required: true
+  token:
+    required: true
+
+runs:
+  using: node16
+  main: main.js
