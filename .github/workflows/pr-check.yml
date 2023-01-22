@@ -1,5 +1,8 @@
 name: PR check
 
+on:
+  workflow_call:
+
 jobs:
   check-labels:
     name: Check labels
