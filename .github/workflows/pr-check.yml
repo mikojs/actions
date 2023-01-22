@@ -19,11 +19,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue: ${{ github.event.pull_request.number }}
-          comment: >
+          comment: |
             Please add at least one of the labels in the PR:
-            - Added
-            - Changed
-            - Deprecated
-            - Removed
-            - Fixed
-            - Security
+            - `Added`
+            - `Changed`
+            - `Deprecated`
+            - `Removed`
+            - `Fixed`
+            - `Security`
