@@ -8,6 +8,7 @@ jobs:
     name: Check PR
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: docker://agilepathway/pull-request-label-checker:latest
         id: label_check
         with:
@@ -27,3 +28,8 @@ jobs:
             - `Removed`
             - `Fixed`
             - `Security`
+      - name: Get the final result
+        if: steps.label_check.outputs.label_check == 'failure'
+        run: |
+          echo "See the comments in the PR."
+          exit 1
