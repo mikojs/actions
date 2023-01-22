@@ -1,4 +1,4 @@
-name: Test PR check
+name: Test check PR
 
 on:
   pull_request:
@@ -10,6 +10,6 @@ on:
       - unlabeled
 
 jobs:
-  pr-check:
-    name: PR check
-    uses: ./.github/workflows/pr-check.yml
+  check-pr:
+    name: Check PR
+    uses: ./.github/workflows/check-pr.yml
