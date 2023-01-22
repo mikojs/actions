@@ -14,3 +14,16 @@ jobs:
           any_of: Added,Changed,Deprecated,Removed,Fixed,Security
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           allow_failure: true
+      - uses: ./create-comment
+        if: steps.label_check.outputs.label_check == 'failure'
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue: ${{ github.event.pull_request.number }}
+          comment: |
+            Please add at least one of the labels in the PR:
+            - `Added`
+            - `Changed`
+            - `Deprecated`
+            - `Removed`
+            - `Fixed`
+            - `Security`
