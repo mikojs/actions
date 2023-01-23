@@ -16,10 +16,10 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           allow_failure: true
       - uses: ./create-comment
-        if: steps.label_check.outputs.label_check == 'failure'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue: ${{ github.event.pull_request.number }}
+          success: steps.label_check.outputs.label_check == 'success'
           comment: |
             Please add at least one of the labels in the PR:
             - `Added`
@@ -28,8 +28,3 @@ jobs:
             - `Removed`
             - `Fixed`
             - `Security`
-      - name: Get the final result
-        if: steps.label_check.outputs.label_check == 'failure'
-        run: |
-          echo "See the comments in the PR."
-          exit 1

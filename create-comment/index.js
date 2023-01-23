@@ -4,6 +4,7 @@ const github = require('@actions/github');
 const token = core.getInput('token', { required: true });
 const comment = core.getInput('comment', { required: true });
 const issue = core.getInput('issue', { required: true });
+const success = core.getInput('success', { required: true });
 const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
 const octokit = github.getOctokit(token);
 
@@ -20,27 +21,29 @@ const octokit = github.getOctokit(token);
   }
 
   const botComment = comments.data.find(
-    ({ user }) => user.login === 'github-actions[bot]',
+    ({ user, body }) => user.login === 'github-actions[bot]' && body === comment,
   );
 
   if (botComment) {
-    if (comment !== botComment.body)
+    if (success)
       await octokit.rest.issues
         .deleteComment({
           owner,
           repo,
           comment_id: botComment.id,
         });
+
+    return;
   }
 
-  if (comment === botComment.body) return;
-
-  await octokit.rest.issues
-    .createComment({
-      owner,
-      repo,
-      issue_number: issue,
-      body: comment,
-    });
-  core.setFailed('See the comments in the PR');
+  if (!success) {
+    await octokit.rest.issues
+      .createComment({
+        owner,
+        repo,
+        issue_number: issue,
+        body: comment,
+      });
+    core.setFailed(comment);
+  }
 })();

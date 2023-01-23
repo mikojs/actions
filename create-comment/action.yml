@@ -7,6 +7,9 @@ inputs:
     required: true
   token:
     required: true
+  success:
+    type: boolean
+    required: true
 
 runs:
   using: node16
