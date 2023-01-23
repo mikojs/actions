@@ -19,24 +19,28 @@ const octokit = github.getOctokit(token);
     return;
   }
 
-  const botCommentExist = comments.data.some(
+  const botComment = comments.data.find(
     ({ user }) => user.login === 'github-actions[bot]',
   );
 
-  if (botCommentExist) return;
+  if (botComment) {
+    if (comment !== botComment.body)
+      await octokit.rest.issues
+        .deleteComment({
+          owner,
+          repo,
+          comment_id: botComment.id,
+        });
+  }
 
-  octokit.rest.issues
+  if (comment === botComment.body) return;
+
+  await octokit.rest.issues
     .createComment({
       owner,
       repo,
       issue_number: issue,
       body: comment,
-    })
-    .then(
-      ({ status }) => {
-        if (status < 200 || status >= 300)
-          core.setFailed(`Received status ${status} from API.`);
-      },
-      e => core.setFailed(e.message),
-    );
+    });
+  core.setFailed('See the comments in the PR');
 })();
