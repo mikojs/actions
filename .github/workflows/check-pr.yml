@@ -19,7 +19,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue: ${{ github.event.pull_request.number }}
-          success: steps.label_check.outputs.label_check == 'success'
+          success: ${{ steps.label_check.outputs.label_check == 'success' }}
           comment: |
             Please add at least one of the labels in the PR:
             - `Added`

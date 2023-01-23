@@ -8,7 +8,7 @@ const github = require('@actions/github');
 const token = core.getInput('token', { required: true });
 const comment = core.getInput('comment', { required: true });
 const issue = core.getInput('issue', { required: true });
-const success = core.getInput('success', { required: true });
+const success = core.getBooleanInput('success', { required: true });
 const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
 const octokit = github.getOctokit(token);
 
