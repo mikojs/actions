@@ -13,5 +13,4 @@ inputs:
 
 runs:
   using: node16
-  pre: pre.js
   main: index.js
