@@ -1,7 +1,3 @@
-const childProcess = require("child_process");
-
-childProcess.execSync(`cd ${__dirname}; yarn`);
-
 const core = require('@actions/core');
 const github = require('@actions/github');
 
