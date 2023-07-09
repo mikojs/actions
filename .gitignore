@@ -3,5 +3,11 @@
 *.log
 .DS_Store
 
+# yarn
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/patches
+
 # rust
 target
