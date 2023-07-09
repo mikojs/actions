@@ -5,5 +5,11 @@
   "packageManager": "yarn@3.6.1",
   "workspaces": [
     "changelog"
-  ]
+  ],
+  "scripts": {
+    "postinstall": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3"
+  }
 }

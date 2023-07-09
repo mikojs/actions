@@ -33,6 +33,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["husky", "npm:8.0.3"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -51,7 +52,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:.", {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["@mikojs/actions", "workspace:."]\
+            ["@mikojs/actions", "workspace:."],\
+            ["husky", "npm:8.0.3"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -61,6 +63,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@napi-rs-cli-npm-2.16.1-620418cc90-5f61712cf1.zip/node_modules/@napi-rs/cli/",\
           "packageDependencies": [\
             ["@napi-rs/cli", "npm:2.16.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["husky", [\
+        ["npm:8.0.3", {\
+          "packageLocation": "./.yarn/cache/husky-npm-8.0.3-b0b59c5127-837bc7e441.zip/node_modules/husky/",\
+          "packageDependencies": [\
+            ["husky", "npm:8.0.3"]\
           ],\
           "linkType": "HARD"\
         }]\
