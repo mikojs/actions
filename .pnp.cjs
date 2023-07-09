@@ -16,15 +16,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:."\
       },\
       {\
-        "name": "@backend/core",\
+        "name": "@mikojs/changelog-action",\
         "reference": "workspace:changelog"\
       }\
     ],\
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
-      ["@backend/core", ["workspace:changelog"]],\
-      ["@mikojs/actions", ["workspace:."]]\
+      ["@mikojs/actions", ["workspace:."]],\
+      ["@mikojs/changelog-action", ["workspace:changelog"]]\
     ],\
     "fallbackPool": [\
     ],\
@@ -38,22 +38,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
-      ["@backend/core", [\
-        ["workspace:changelog", {\
-          "packageLocation": "./changelog/",\
-          "packageDependencies": [\
-            ["@backend/core", "workspace:changelog"],\
-            ["@napi-rs/cli", "npm:2.16.1"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
       ["@mikojs/actions", [\
         ["workspace:.", {\
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@mikojs/actions", "workspace:."],\
             ["husky", "npm:8.0.3"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@mikojs/changelog-action", [\
+        ["workspace:changelog", {\
+          "packageLocation": "./changelog/",\
+          "packageDependencies": [\
+            ["@mikojs/changelog-action", "workspace:changelog"],\
+            ["@napi-rs/cli", "npm:2.16.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
