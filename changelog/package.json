@@ -1,12 +1,10 @@
 {
   "private": true,
   "name": "@mikojs/changelog-action",
-  "version": "0.0.0",
-  "packageManager": "yarn@3.6.1",
   "scripts": {
     "build": "napi build --release"
   },
-  "dependencies": {
+  "devDependencies": {
     "@napi-rs/cli": "^2.16.1"
   }
 }
