@@ -41,7 +41,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:changelog", {\
           "packageLocation": "./changelog/",\
           "packageDependencies": [\
-            ["@backend/core", "workspace:changelog"]\
+            ["@backend/core", "workspace:changelog"],\
+            ["@napi-rs/cli", "npm:2.16.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -53,6 +54,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@mikojs/actions", "workspace:."]\
           ],\
           "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@napi-rs/cli", [\
+        ["npm:2.16.1", {\
+          "packageLocation": "./.yarn/cache/@napi-rs-cli-npm-2.16.1-620418cc90-5f61712cf1.zip/node_modules/@napi-rs/cli/",\
+          "packageDependencies": [\
+            ["@napi-rs/cli", "npm:2.16.1"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]]\
     ]\
