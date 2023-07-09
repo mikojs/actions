@@ -1,0 +1,8 @@
+{
+  "name": "@backend/core",
+  "version": "0.0.0",
+  "packageManager": "yarn@3.3.0",
+  "scripts": {
+    "build": "napi build ./rust --cargo-cwd ./rust --pipe ./custom-types/build.js --dts rust.d.ts --release --no-const-enum --features local"
+  }
+}

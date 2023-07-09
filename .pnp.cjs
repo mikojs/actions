@@ -14,11 +14,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {\
         "name": "@mikojs/actions",\
         "reference": "workspace:."\
+      },\
+      {\
+        "name": "@backend/core",\
+        "reference": "workspace:changelog"\
       }\
     ],\
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
+      ["@backend/core", ["workspace:changelog"]],\
       ["@mikojs/actions", ["workspace:."]]\
     ],\
     "fallbackPool": [\
@@ -28,6 +33,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@backend/core", [\
+        ["workspace:changelog", {\
+          "packageLocation": "./changelog/",\
+          "packageDependencies": [\
+            ["@backend/core", "workspace:changelog"]\
           ],\
           "linkType": "SOFT"\
         }]\

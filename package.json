@@ -2,5 +2,8 @@
   "private": true,
   "name": "@mikojs/actions",
   "version": "0.0.0",
-  "packageManager": "yarn@3.6.1"
+  "packageManager": "yarn@3.6.1",
+  "workspaces": [
+    "changelog"
+  ]
 }
