@@ -3,9 +3,38 @@
 
 __metadata:
   version: 6
+  cacheKey: 8
 
 "@mikojs/actions@workspace:.":
   version: 0.0.0-use.local
   resolution: "@mikojs/actions@workspace:."
+  dependencies:
+    husky: ^8.0.3
   languageName: unknown
   linkType: soft
+
+"@mikojs/changelog-action@workspace:changelog":
+  version: 0.0.0-use.local
+  resolution: "@mikojs/changelog-action@workspace:changelog"
+  dependencies:
+    "@napi-rs/cli": ^2.16.1
+  languageName: unknown
+  linkType: soft
+
+"@napi-rs/cli@npm:^2.16.1":
+  version: 2.16.1
+  resolution: "@napi-rs/cli@npm:2.16.1"
+  bin:
+    napi: scripts/index.js
+  checksum: 5f61712cf1a4002b7b9b65bc4a6f2a7df68b197cfc7024c7d28820e3b12b5e9c0baa0d85f262f25dbf928586ce01c5c06837754f9f98ef4ebafa55dd027c6837
+  languageName: node
+  linkType: hard
+
+"husky@npm:^8.0.3":
+  version: 8.0.3
+  resolution: "husky@npm:8.0.3"
+  bin:
+    husky: lib/bin.js
+  checksum: 837bc7e4413e58c1f2946d38fb050f5d7324c6f16b0fd66411ffce5703b294bd21429e8ba58711cd331951ee86ed529c5be4f76805959ff668a337dbfa82a1b0
+  languageName: node
+  linkType: hard

@@ -14,12 +14,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {\
         "name": "@mikojs/actions",\
         "reference": "workspace:."\
+      },\
+      {\
+        "name": "@mikojs/changelog-action",\
+        "reference": "workspace:changelog"\
       }\
     ],\
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
-      ["@mikojs/actions", ["workspace:."]]\
+      ["@mikojs/actions", ["workspace:."]],\
+      ["@mikojs/changelog-action", ["workspace:changelog"]]\
     ],\
     "fallbackPool": [\
     ],\
@@ -28,6 +33,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["husky", "npm:8.0.3"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -36,9 +42,38 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:.", {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["@mikojs/actions", "workspace:."]\
+            ["@mikojs/actions", "workspace:."],\
+            ["husky", "npm:8.0.3"]\
           ],\
           "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@mikojs/changelog-action", [\
+        ["workspace:changelog", {\
+          "packageLocation": "./changelog/",\
+          "packageDependencies": [\
+            ["@mikojs/changelog-action", "workspace:changelog"],\
+            ["@napi-rs/cli", "npm:2.16.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@napi-rs/cli", [\
+        ["npm:2.16.1", {\
+          "packageLocation": "./.yarn/cache/@napi-rs-cli-npm-2.16.1-620418cc90-5f61712cf1.zip/node_modules/@napi-rs/cli/",\
+          "packageDependencies": [\
+            ["@napi-rs/cli", "npm:2.16.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["husky", [\
+        ["npm:8.0.3", {\
+          "packageLocation": "./.yarn/cache/husky-npm-8.0.3-b0b59c5127-837bc7e441.zip/node_modules/husky/",\
+          "packageDependencies": [\
+            ["husky", "npm:8.0.3"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]]\
     ]\

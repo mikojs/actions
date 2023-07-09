@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "name": "@mikojs/changelog-action",
+  "scripts": {
+    "build": "napi build --release"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^2.16.1"
+  }
+}
