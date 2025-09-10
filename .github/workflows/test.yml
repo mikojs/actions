@@ -8,4 +8,3 @@ jobs:
     uses: ./.github/workflows/check-nix.yml
     with:
       folder: ./.github/tests
-
