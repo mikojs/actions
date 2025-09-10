@@ -1,0 +1,10 @@
+name: Test workflows
+
+on: [push]
+
+jobs:
+  check-nix:
+    name: Check Nix
+    uses: ./.github/workflows/check-nix.yml
+    with:
+      folder: ./.github/tests

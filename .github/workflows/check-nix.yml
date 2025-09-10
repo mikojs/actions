@@ -1,0 +1,21 @@
+name: Check Nix
+
+on:
+  workflow_call:
+    inputs:
+      folder:
+        type: string
+        default: .
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check Nix flake inputs
+        uses: DeterminateSystems/flake-checker-action@main
+        with:
+          flake-lock-path: ${{ inputs.folder }}/flake.lock
+      - uses: cachix/install-nix-action@v31
+      - name: Check Nix flake logic
+        run: nix flake check ${{ inputs.folder }} --no-build
