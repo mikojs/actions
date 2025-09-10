@@ -5,7 +5,7 @@ on: [push]
 jobs:
   check-nix:
     name: Check Nix
-    uses: ./workflows/check-nix.yml
+    uses: ./workflows/check-nix.yml@add-nixos-action
     with:
       folder: ./.github/tests
 
