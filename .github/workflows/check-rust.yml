@@ -6,9 +6,6 @@ on:
       folder:
         type: string
         default: .
-      toolchain:
-        type: string
-        default: stable
 
 jobs:
   check:
@@ -18,11 +15,6 @@ jobs:
         working-directory: ${{ inputs.folder }}
     steps:
       - uses: actions/checkout@v3
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: ${{ inputs.toolchain }}
-          components: rustfmt, clippy
       - name: Cache cargo registry
         uses: actions/cache@v4
         with:
