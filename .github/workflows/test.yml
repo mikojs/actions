@@ -8,3 +8,8 @@ jobs:
     uses: ./.github/workflows/check-nix.yml
     with:
       folder: ./.github/tests
+  check-rust:
+    name: Check Rust
+    uses: ./.github/workflows/check-rust.yml
+    with:
+      folder: ./.github/tests/rust
