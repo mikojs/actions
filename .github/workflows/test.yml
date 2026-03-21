@@ -4,12 +4,10 @@ on: [push]
 
 jobs:
   check-nix:
-    name: Check Nix
     uses: ./.github/workflows/check-nix.yml
     with:
       folder: ./.github/tests/nix
   check-rust:
-    name: Check Rust
     uses: ./.github/workflows/check-rust.yml
     with:
       folder: ./.github/tests/rust
